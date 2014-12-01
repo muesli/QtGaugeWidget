@@ -18,9 +18,7 @@
 
 #include "StatsGauge.h"
 
-#include "utils/TomahawkStyle.h"
 #include "utils/TomahawkUtilsGui.h"
-#include "utils/Logger.h"
 
 #include <QEasingCurve>
 #include <QPainter>
@@ -28,7 +26,11 @@
 #include <QPropertyAnimation>
 #include <QLayout>
 #include <QString>
-#include <boost/concept_check.hpp>
+
+static const QColor HEADER_GAUGE_HIGHLIGHT = QColor( "#7DC4FF" );
+static const QColor HEADER_GAUGE_BACKGROUND = QColor( "#0B0A0A" );
+static const QColor HEADER_GAUGE_TEXT = QColor( "#FFFFFF" );
+static const QColor HEADER_GAUGE_LABEL_BACKGROUND = QColor( "#0B0A0A" );
 
 
 StatsGauge::StatsGauge( QWidget* parent )
@@ -54,7 +56,7 @@ StatsGauge::paintEvent( QPaintEvent* event )
 
     QSize gaugeSize = m_sizeHint - QSize( 0, 40 );
 
-    QPen pen( TomahawkStyle::HEADER_GAUGE_HIGHLIGHT );
+    QPen pen( HEADER_GAUGE_HIGHLIGHT );
     pen.setWidth( 16 );
     p.setPen( pen );
 
@@ -62,15 +64,15 @@ StatsGauge::paintEvent( QPaintEvent* event )
     p.drawArc( QRect( 12, 12, gaugeSize.width() - 24, gaugeSize.height() - 24 ),
                4 * 360, (int)( -1.0 * (float)fullCircle * ( invertedAppearance() ? ( 1.0 - m_percentage ) : m_percentage ) ) );
 
-    pen = QPen( TomahawkStyle::HEADER_GAUGE_HIGHLIGHT.darker() );
+    pen = QPen( HEADER_GAUGE_HIGHLIGHT.darker() );
     pen.setWidth( 6 );
     p.setPen( pen );
 
-    QBrush brush( TomahawkStyle::HEADER_GAUGE_BACKGROUND );
+    QBrush brush( HEADER_GAUGE_BACKGROUND );
     p.setBrush( brush );
     p.drawEllipse( QRect( 28, 28, gaugeSize.width() - 56, gaugeSize.height() - 56 ) );
 
-    pen = QPen( TomahawkStyle::HEADER_GAUGE_TEXT );
+    pen = QPen( HEADER_GAUGE_TEXT );
     p.setPen( pen );
     QFont font = p.font();
     font.setWeight( QFont::Black );
@@ -84,7 +86,7 @@ StatsGauge::paintEvent( QPaintEvent* event )
     QRect textRect( 0, gaugeSize.height() / 2 - 14, gaugeSize.width(), 62 );
     p.drawText( textRect, Qt::AlignCenter, value() > 0 ? QString::number( value() ) : "-" );
 
-    pen = QPen( TomahawkStyle::HEADER_GAUGE_TEXT.darker() );
+    pen = QPen( HEADER_GAUGE_TEXT.darker() );
     p.setPen( pen );
     font = p.font();
     font.setWeight( QFont::Black );
@@ -96,14 +98,14 @@ StatsGauge::paintEvent( QPaintEvent* event )
 
     if ( !m_text.isEmpty() )
     {
-        pen = QPen( TomahawkStyle::HEADER_GAUGE_TEXT );
+        pen = QPen( HEADER_GAUGE_TEXT );
         p.setPen( pen );
         font = p.font();
         font.setWeight( QFont::DemiBold );
         font.setPixelSize( 16 );
         p.setFont( font );
 
-        QColor figColor( TomahawkStyle::HEADER_GAUGE_LABEL_BACKGROUND );
+        QColor figColor( HEADER_GAUGE_LABEL_BACKGROUND );
         p.setBrush( figColor );
 
         QFontMetrics fm( font );
